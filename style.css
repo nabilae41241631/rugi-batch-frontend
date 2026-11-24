@@ -378,3 +378,8 @@ nav .active,
 nav .active * {
   color: #ffffff !important;
 }
+
+.nav-link.text-on-primary,
+.nav-link.text-on-primary span {
+  color: #ffffff !important;
+}
