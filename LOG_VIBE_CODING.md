@@ -61,8 +61,12 @@ Tim melakukan pengujian langsung terhadap respons API dan perilaku aplikasi di b
   Grafik garis sempat gagal menggambar titik data karena membaca field rendemen_persen. Tim mengubah pembacaan kode ke field asli backend yaitu rendemen_aktual_persen serta mengatur skala sumbu Y secara dinamis mengikuti nilai minimum dan maksimum data.
 - Normalisasi Status Anomali dan Perbaikan Filter Riwayat:
   Backend mengembalikan status Anomali untuk batch dengan penyusutan tinggi, sedangkan filter awal hanya mengenali label Bocor. Tim menyelaraskan pemetaan status dan memisahkan array sumber data (_sumberRiwayat) agar perpindahan tab filter tidak menimpa data asli.
-- Validasi Pilihan Kode Perlakuan (kode_perlakuan):
-  Backend hanya menerima kode standar A1, A2, A3, B1, B2, dan B3. Tim mengubah kolom input teks bebas menjadi menu pilihan dropdown agar operator tidak salah memasukkan kode perlakuan.
+- Penyesuaian Nilai Default dan Pilihan Kode Perlakuan (kode_perlakuan):
+  Backend hanya menerima kode standar A1, A2, A3, B1, B2, dan B3, sedangkan nilai bawaan awal di app.js masih mengirimkan GRG-KERING-01 yang memicu pesan galat validasi. Tim mengganti nilai bawaan tersebut ke kode valid (A1 sampai B3) dan mengubah kolom input menjadi pilihan terstandar agar operator tidak salah memasukkan kode.
+- Perbaikan Kontras Warna Teks Menu Aktif (style.css):
+  Saat menu navigasi aktif menggunakan kelas Tailwind bg-primary-container dan text-on-primary, warna teks dan ikon terlihat gelap di atas latar hijau tua. Tim menambahkan aturan CSS spesifik untuk kelas .nav-link.text-on-primary di bagian akhir style.css agar warna teks dan ikon menjadi putih (#ffffff).
+- Penyegaran Cache Service Worker Saat Deployment (sw.js):
+  Setelah pembaruan kode diunggah ke GitHub dan Vercel, browser sempat memuat versi tampilan lama dari memori offline. Tim melakukan penghapusan penyimpanan situs (Clear site data) dan memastikan pembaruan cache Service Worker berjalan agar perubahan terbaru langsung tampil.
 - Perbaikan Kode Ikon Antarmuka:
   Mengganti nama ikon Material Symbols yang tidak dikenali browser (signal_wifi_statusbar_connected_no_internet_4) menjadi ikon standar cloud_done dan wifi_off agar tidak tampil sebagai teks panjang yang menabrak elemen lain.
 - Penyelarasan Rumus Estimasi Lokal Saat Offline:
@@ -97,13 +101,14 @@ Tim melakukan pengujian langsung terhadap respons API dan perilaku aplikasi di b
 1. Service Worker (sw.js): Menyimpan berkas index.html, style.css, app.js, dan sw.js ke dalam cache rugibatch-v1 menggunakan strategi Cache-First sehingga halaman tetap dapat dimuat ulang tanpa koneksi internet.
 2. Batas Waktu Tunggu 8 Detik: Permintaan API dibatasi maksimal 8 detik menggunakan AbortController. Jika sinyal lambat melewati batas tersebut, sistem langsung beralih memuat data cadangan dari memori lokal.
 3. Penyimpanan localStorage dan Antrean Sinkronisasi:
-   - rugibatch_dashboard_v1: Menyimpan data ringkasan beranda terakhir selama 24 jam.
-   - rugibatch_riwayat_v1: Menyimpan daftar riwayat batch terakhir selama 24 jam.
-   - rugibatch_offline_queue_v1: Menyimpan antrean catatan batch yang dikirim saat offline dan menyinkronkannya otomatis ke server begitu event window.online aktif.
+  - rugibatch_dashboard_v1: Menyimpan data ringkasan beranda terakhir selama 24 jam.
+  - rugibatch_riwayat_v1: Menyimpan daftar riwayat batch terakhir selama 24 jam.
+  - rugibatch_offline_queue_v1: Menyimpan antrean catatan batch yang dikirim saat offline dan menyinkronkannya otomatis ke server begitu event window.online aktif.
 
 ---
 
 ## 6. Panduan Pengujian Tim
 
 - Akun Demo Pengujian: Email sari@bawanghangat.com dengan kata sandi demo123 (tersedia tombol pengisian otomatis di halaman masuk).
+- Skenario Uji Batch Normal: Masukkan berat awal 50 kg, harga beli Rp 42.672, kode perlakuan A1, suhu minyak 160 derajat Celcius, lama goreng 10 menit, tahap kupas 43 kg, iris 41,5 kg, goreng 15 kg, dan kemas 14,5 kg untuk memverifikasi status Normal dengan perkiraan rugi Rp 0.
 - Pengujian Mode Offline: Service Worker aktif penuh saat aplikasi diakses melalui alamat HTTPS (tautan Vercel) atau localhost. Saat diuji secara offline, pastikan data beranda tetap muncul dari cache lokal dan pengiriman batch baru masuk ke antrean sinkronisasi.
