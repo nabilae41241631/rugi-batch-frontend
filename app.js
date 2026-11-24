@@ -752,7 +752,7 @@ function renderCatatBatch() {
             <div class="flex flex-col gap-space-xs">
               <label class="font-label-md text-label-md text-on-surface" for="f-kode">Kode Perlakuan / Metode Goreng</label>
               <input class="h-14 px-space-md bg-surface-container-lowest rounded-xl font-label-md text-label-md text-on-surface focus:outline-none focus:ring-4 focus:ring-primary/20"
-                id="f-kode" name="kode_perlakuan" type="text" placeholder="Contoh: GRG-KERING-01" value="GRG-KERING-01" required />
+                id="f-kode" name="kode_perlakuan" type="text" placeholder="Contoh: A1" value="A1" required />
               <p class="font-body-sm text-body-sm text-on-surface-variant">Kode SOP wajan yang digunakan hari ini.</p>
             </div>
 

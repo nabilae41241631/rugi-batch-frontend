@@ -52,9 +52,10 @@ body {
   color: #231a11;
 }
 
-.nav-link.active {
+.nav-link.active,
+.nav-link.active span {
   background-color: #2f6b3a;
-  color: #ffffff;
+  color: #ffffff !important;
   font-weight: 700;
 }
 
@@ -63,9 +64,10 @@ nav .nav-link {
   color: #414940;
 }
 
-nav .nav-link.active {
+nav .nav-link.active,
+nav .nav-link.active span {
   background-color: #2f6b3a;
-  color: #ffffff;
+  color: #ffffff !important;
 }
 
 /* ---------- Material Symbols Trick ---------- */
