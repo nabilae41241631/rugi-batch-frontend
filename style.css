@@ -370,3 +370,11 @@ nav .nav-link.active span {
 .stat-card.bar-orange::before { background: #8f4e00; }
 .stat-card.bar-red::before    { background: #ba1a1a; }
 .stat-card.bar-yellow::before { background: #f2b705; }
+aside .active,
+aside .active *,
+aside [aria-current="page"],
+aside [aria-current="page"] *,
+nav .active,
+nav .active * {
+  color: #ffffff !important;
+}
