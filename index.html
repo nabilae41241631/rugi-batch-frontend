@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RUGI-BATCH AI — Pemantauan Produksi Bawang Goreng</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24..48,400..700,0..1,-50..200" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind — konfigurasi penuh sesuai DESIGN.md Stitch -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'surface-variant':            '#f2dfd1',
+            'tertiary-container':         '#92475d',
+            'on-surface':                 '#231a11',
+            'surface':                    '#fff8f5',
+            'on-background':              '#231a11',
+            'on-tertiary-container':      '#ffcdd7',
+            'inverse-surface':            '#392e25',
+            'surface-bright':             '#fff8f5',
+            'on-secondary':               '#ffffff',
+            'error':                      '#ba1a1a',
+            'on-primary-fixed':           '#002108',
+            'on-error':                   '#ffffff',
+            'primary-fixed':              '#b1f2b4',
+            'tertiary-fixed':             '#ffd9e0',
+            'on-tertiary-fixed-variant':  '#742f45',
+            'on-primary-fixed-variant':   '#135224',
+            'background':                 '#fff8f5',
+            'on-tertiary':                '#ffffff',
+            'surface-container-highest':  '#f2dfd1',
+            'outline-variant':            '#c0c9bd',
+            'on-secondary-container':     '#6d3a00',
+            'on-tertiary-fixed':          '#3d031a',
+            'on-error-container':         '#93000a',
+            'surface-container':          '#feeadc',
+            'primary-fixed-dim':          '#96d69a',
+            'on-secondary-fixed-variant': '#6d3a00',
+            'inverse-primary':            '#96d69a',
+            'surface-tint':               '#2e6a39',
+            'primary':                    '#145224',
+            'tertiary':                   '#753046',
+            'on-surface-variant':         '#414940',
+            'secondary-fixed-dim':        '#ffb77a',
+            'surface-container-lowest':   '#ffffff',
+            'primary-container':          '#2f6b3a',
+            'secondary':                  '#8f4e00',
+            'on-secondary-fixed':         '#2e1500',
+            'tertiary-fixed-dim':         '#ffb1c4',
+            'surface-container-low':      '#fff1e8',
+            'on-primary':                 '#ffffff',
+            'surface-container-high':     '#f8e5d6',
+            'secondary-fixed':            '#ffdcc2',
+            'secondary-container':        '#fea047',
+            'error-container':            '#ffdad6',
+            'surface-dim':                '#e9d7c8',
+            'outline':                    '#71796f',
+            'on-primary-container':       '#a8e9ac',
+            'inverse-on-surface':         '#ffeee1',
+          },
+          borderRadius: {
+            DEFAULT: '0.25rem',
+            lg: '0.5rem',
+            xl: '0.75rem',
+            full: '9999px',
+          },
+          spacing: {
+            'gutter':         '1.5rem',
+            'margin-mobile':  '1.25rem',
+            'space-md':       '1.25rem',
+            'space-lg':       '1.75rem',
+            'gutter-mobile':  '1rem',
+            'margin':         '2.5rem',
+            'space-xs':       '0.375rem',
+            'space-xl':       '2.5rem',
+            'space-sm':       '0.75rem',
+          },
+          fontFamily: {
+            'sans':              ['"Plus Jakarta Sans"', 'sans-serif'],
+            'label-sm':          ['"Plus Jakarta Sans"'],
+            'label-md':          ['"Plus Jakarta Sans"'],
+            'label-lg':          ['"Plus Jakarta Sans"'],
+            'headline-sm':       ['"Plus Jakarta Sans"'],
+            'headline-md':       ['"Plus Jakarta Sans"'],
+            'headline-lg':       ['"Plus Jakarta Sans"'],
+            'headline-lg-mobile':['"Plus Jakarta Sans"'],
+            'body-sm':           ['"Plus Jakarta Sans"'],
+            'body-md':           ['"Plus Jakarta Sans"'],
+            'body-lg':           ['"Plus Jakarta Sans"'],
+          },
+          fontSize: {
+            'label-sm':          ['14px', { lineHeight: '20px', letterSpacing: '0.02em', fontWeight: '700' }],
+            'label-md':          ['16px', { lineHeight: '22px', fontWeight: '700' }],
+            'label-lg':          ['18px', { lineHeight: '26px', fontWeight: '700' }],
+            'headline-sm':       ['22px', { lineHeight: '32px', fontWeight: '700' }],
+            'headline-md':       ['28px', { lineHeight: '38px', fontWeight: '700' }],
+            'headline-lg':       ['36px', { lineHeight: '48px', letterSpacing: '-0.02em', fontWeight: '700' }],
+            'headline-lg-mobile':['28px', { lineHeight: '38px', letterSpacing: '-0.01em', fontWeight: '700' }],
+            'body-sm':           ['16px', { lineHeight: '24px', fontWeight: '500' }],
+            'body-md':           ['18px', { lineHeight: '28px', fontWeight: '500' }],
+            'body-lg':           ['20px', { lineHeight: '32px', fontWeight: '500' }],
+          },
+        },
+      },
+    };
+  </script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-surface font-body-md text-on-surface antialiased min-h-screen">
+
+  <!-- =========================================================
+       HALAMAN LOGIN (page-login)
+       Desain: layar_1_halaman_masuk_desktop_1440px
+       ========================================================= -->
+  <div id="page-login" class="page-view active">
+    <main class="w-full min-h-screen flex flex-col lg:flex-row overflow-hidden bg-[#FAF7F2]">
+
+      <!-- KOLOM KIRI -->
+      <section class="w-full lg:w-1/2 bg-[#F4EDE4] p-8 md:p-12 lg:p-16 flex flex-col justify-between border-r border-[#E8DEC8]/60 min-h-screen">
+        <div class="flex flex-col gap-7">
+          <!-- Logo -->
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-xl bg-[#2F6B3A] flex items-center justify-center text-white shadow-sm shrink-0">
+              <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C12 2 12.8 4.2 13.9 5.5C16.8 8.8 19.5 12.2 19.5 15.5C19.5 19.1 16.1 22 12 22C7.9 22 4.5 19.1 4.5 15.5C4.5 12.2 7.2 8.8 10.1 5.5C11.2 4.2 12 2 12 2ZM12 6.8C10.1 9.3 7.8 12.2 7.8 15C7.8 17.5 9.7 19.5 12 19.5C14.3 19.5 16.2 17.5 16.2 15C16.2 12.2 13.9 9.3 12 6.8ZM12 9.5C13.2 11.2 14.5 13.2 14.5 15C14.5 16.4 13.4 17.5 12 17.5C10.6 17.5 9.5 16.4 9.5 15C9.5 13.2 10.8 11.2 12 9.5Z"/>
+              </svg>
+            </div>
+            <span class="text-[26px] font-extrabold tracking-tight text-[#2F6B3A]">RUGI-BATCH</span>
+          </div>
+
+          <!-- Headline -->
+          <div class="flex flex-col gap-3 max-w-xl">
+            <h1 class="text-[36px] xl:text-[44px] font-extrabold leading-[1.18] text-[#2B2118]">
+              Ketahui di mana bawang goreng Anda hilang.
+            </h1>
+            <p class="text-[20px] leading-relaxed text-[#5C4D3C] font-medium">
+              Catat bawang merah dari mentah sampai jadi bawang goreng, lalu lihat tahap mana yang boros.
+            </p>
+          </div>
+
+          <!-- 3 Poin Manfaat -->
+          <div class="flex flex-col gap-4 mt-2 max-w-lg">
+            <div class="flex items-center gap-4 bg-[#FAF7F2]/90 px-5 py-3.5 rounded-[12px] border border-[#E8DEC8]">
+              <div class="w-10 h-10 rounded-lg bg-[#2F6B3A]/10 text-[#2F6B3A] flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 3v18m0-18l-8 5m8-5l8 5M4 8l-2 6a3 3 0 006 0L6 8m12 0l-2 6a3 3 0 006 0L20 8M8 21h8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <span class="text-[20px] font-bold text-[#2B2118]">Catat berat tiap tahap</span>
+            </div>
+            <div class="flex items-center gap-4 bg-[#FAF7F2]/90 px-5 py-3.5 rounded-[12px] border border-[#E8DEC8]">
+              <div class="w-10 h-10 rounded-lg bg-[#D9822B]/15 text-[#D9822B] flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <span class="text-[20px] font-bold text-[#2B2118]">Lihat tahap mana yang boros</span>
+            </div>
+            <div class="flex items-center gap-4 bg-[#FAF7F2]/90 px-5 py-3.5 rounded-[12px] border border-[#E8DEC8]">
+              <div class="w-10 h-10 rounded-lg bg-[#2F6B3A]/10 text-[#2F6B3A] flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <span class="text-[20px] font-bold text-[#2B2118]">Tahu rugi dalam Rupiah</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Foto Produksi -->
+        <div class="mt-8 relative w-full h-44 xl:h-52 rounded-[12px] overflow-hidden border border-[#E8DEC8] shadow-sm">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9c0U1Hg925p7wajUr4QXQ4sXCLiL1z2mIoyPFvSjMRy_3iGVMqqUp05GBc5T7wE7eiY-E7duuVXSV_-z_EeK201IviD1i1wvHBuiwfPgjAf2T4fKZmabXywTdk4pWCydDJp1BJIgs8QYCfcU-Mfl6Ee_4KYxACP44vQFVsGULepcAi0Sm5rQyvaEv49D1onQwt4gT46mKz5dL_XJRxUriWxGvhf_o_ROvg2munak"
+            alt="Suasana dapur produksi bawang goreng" class="w-full h-full object-cover object-center" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-4">
+            <span class="text-white/95 text-[15px] font-medium tracking-wide">Dapur Produksi Bawang Goreng Rumahan</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- KOLOM KANAN: Form Login -->
+      <section class="w-full lg:w-1/2 bg-white flex items-center justify-center p-8 md:p-12 min-h-screen">
+        <div class="w-full max-w-[480px] flex flex-col my-auto">
+          <h2 class="text-[32px] font-bold text-[#2B2118] tracking-tight mb-8">Masuk ke Akun Anda</h2>
+
+          <!-- Error banner -->
+          <div id="login-error" class="hidden mb-5 p-4 rounded-[10px] bg-error-container text-on-error-container text-[16px] font-medium flex items-center gap-2">
+            <span class="material-symbols-outlined">error</span>
+            <span id="login-error-msg">Email atau kata sandi salah.</span>
+          </div>
+
+          <form class="flex flex-col gap-5" id="loginForm" onsubmit="event.preventDefault(); handleLogin();">
+            <div class="flex flex-col gap-2">
+              <label class="text-[18px] font-medium text-[#2B2118]" for="emailInput">Email</label>
+              <input class="w-full h-[56px] px-4 rounded-[10px] border border-[#D5C9B8] bg-white text-[18px] text-[#2B2118] placeholder-[#9E9080] focus:border-[#2F6B3A] focus:ring-2 focus:ring-[#2F6B3A]/20 transition-all outline-none"
+                id="emailInput" name="email" placeholder="contoh: sari@bawanghangat.com" required type="email" />
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label class="text-[18px] font-medium text-[#2B2118]" for="passwordInput">Kata Sandi</label>
+              <div class="relative flex items-center">
+                <input class="w-full h-[56px] pl-4 pr-20 rounded-[10px] border border-[#D5C9B8] bg-white text-[18px] text-[#2B2118] placeholder-[#9E9080] focus:border-[#2F6B3A] focus:ring-2 focus:ring-[#2F6B3A]/20 transition-all outline-none"
+                  id="passwordInput" name="password" placeholder="Masukkan kata sandi" required type="password" />
+                <button aria-label="Tampilkan atau sembunyikan kata sandi"
+                  class="absolute right-3 px-3 py-1.5 text-[16px] font-semibold text-[#2F6B3A] hover:bg-[#F4EDE4] rounded-md transition-colors"
+                  id="togglePasswordBtn" onclick="togglePasswordVisibility()" type="button">
+                  <span id="toggleText">Lihat</span>
+                </button>
+              </div>
+            </div>
+
+            <button id="btn-login"
+              class="w-full h-[56px] bg-[#2F6B3A] hover:bg-[#25562e] active:scale-[0.99] text-white rounded-[10px] text-[20px] font-bold shadow-sm transition-all duration-150 mt-2 flex items-center justify-center gap-2 cursor-pointer"
+              type="submit">
+              <span id="login-spinner" class="hidden w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              <span id="login-label">Masuk</span>
+            </button>
+
+            <div class="relative flex items-center py-1">
+              <div class="grow border-t border-[#E8DEC8]"></div>
+              <span class="shrink-0 px-4 text-[16px] font-medium text-[#8C7A68]">atau</span>
+              <div class="grow border-t border-[#E8DEC8]"></div>
+            </div>
+
+            <button class="w-full h-[56px] border-2 border-[#D9822B] text-[#D9822B] bg-[#FFF8F2] hover:bg-[#FFEEDD] active:scale-[0.99] rounded-[10px] text-[20px] font-bold transition-all duration-150 flex items-center justify-center cursor-pointer"
+              onclick="fillDemoAccount()" type="button">
+              Coba Langsung dengan Akun Demo
+            </button>
+
+            <div class="bg-[#FEF9E7] border border-[#F2D06B] rounded-[10px] p-4 mt-1 flex flex-col gap-2.5">
+              <p class="text-[16px] text-[#4A3B18] leading-snug">
+                Untuk juri/penguji: tekan tombol <span class="font-bold text-[#D9822B]">Akun Demo</span> di atas, tidak perlu mengisi apa-apa.
+              </p>
+              <div class="text-[16px] text-[#4A3B18] flex flex-col gap-1 border-t border-[#F2D06B]/50 pt-2">
+                <div><span class="text-[#7A622A]">Email demo:</span> <span class="font-semibold text-[#2B2118]">sari@bawanghangat.com</span></div>
+                <div><span class="text-[#7A622A]">Kata sandi:</span> <span class="font-semibold text-[#2B2118]">demo123</span></div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- =========================================================
+       APP LAYOUT — Sidebar + Header + Konten
+       Desain: layar_2_beranda (shell bersama)
+       ========================================================= -->
+  <div id="app-layout" class="hidden">
+
+    <!-- Sidebar Desktop -->
+    <aside class="hidden lg:flex fixed left-0 top-0 h-full w-72 bg-surface-container-low shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex-col justify-between py-space-lg px-space-md">
+      <div class="flex flex-col gap-space-lg">
+        <!-- Brand -->
+        <div class="flex items-center gap-space-sm px-space-xs">
+          <div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary shrink-0">
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+              <path d="M12 2C12 2 12.8 4.2 13.9 5.5C16.8 8.8 19.5 12.2 19.5 15.5C19.5 19.1 16.1 22 12 22C7.9 22 4.5 19.1 4.5 15.5C4.5 12.2 7.2 8.8 10.1 5.5C11.2 4.2 12 2 12 2ZM12 6.8C10.1 9.3 7.8 12.2 7.8 15C7.8 17.5 9.7 19.5 12 19.5C14.3 19.5 16.2 17.5 16.2 15C16.2 12.2 13.9 9.3 12 6.8Z"/>
+            </svg>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-headline-sm text-headline-sm text-primary leading-none">RUGI-BATCH</span>
+            <span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">UMKM Bawang Goreng</span>
+          </div>
+        </div>
+
+        <!-- Nav -->
+        <nav class="flex flex-col gap-space-sm">
+          <a class="nav-link flex items-center gap-space-sm min-h-[56px] px-space-md rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md" data-view="beranda" href="#beranda">
+            <span class="material-symbols-outlined text-[28px]">home</span>
+            <span>1. Beranda</span>
+          </a>
+          <a class="nav-link flex items-center gap-space-sm min-h-[56px] px-space-md rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md" data-view="catat-batch" href="#catat-batch">
+            <span class="material-symbols-outlined text-[28px]">assignment_add</span>
+            <span>2. Catat Batch</span>
+          </a>
+          <a class="nav-link flex items-center gap-space-sm min-h-[56px] px-space-md rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md" data-view="riwayat" href="#riwayat">
+            <span class="material-symbols-outlined text-[28px]">fact_check</span>
+            <span>3. Riwayat &amp; Pemeriksaan</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- User + Logout -->
+      <div class="flex flex-col gap-space-sm pt-space-md bg-surface-container-lowest/60 p-space-md rounded-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+        <div class="flex items-center gap-space-sm">
+          <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+          </div>
+          <div class="flex flex-col min-w-0">
+            <span class="font-label-md text-label-md text-on-surface truncate" id="sidebar-username">Bu Sari</span>
+            <span class="font-label-sm text-label-sm text-on-surface-variant leading-none">Pemilik Usaha</span>
+          </div>
+        </div>
+        <button onclick="handleLogout()"
+          class="flex items-center justify-center gap-space-xs min-h-[48px] px-space-md rounded-lg bg-surface-container-high text-on-surface hover:bg-error-container hover:text-on-error-container transition-colors font-label-sm text-label-sm">
+          <span class="material-symbols-outlined text-[20px]">logout</span>
+          <span>Keluar</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Wrapper konten -->
+    <div class="lg:pl-72 flex flex-col min-h-screen">
+
+      <!-- Header -->
+      <header class="fixed top-0 left-0 lg:left-72 right-0 h-16 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-margin-mobile lg:px-margin">
+        <div class="flex items-center gap-space-sm">
+          <div class="lg:hidden w-9 h-9 rounded-xl bg-primary-container flex items-center justify-center text-on-primary">
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+              <path d="M12 2C12 2 12.8 4.2 13.9 5.5C16.8 8.8 19.5 12.2 19.5 15.5C19.5 19.1 16.1 22 12 22C7.9 22 4.5 19.1 4.5 15.5C4.5 12.2 7.2 8.8 10.1 5.5C11.2 4.2 12 2 12 2ZM12 6.8C10.1 9.3 7.8 12.2 7.8 15C7.8 17.5 9.7 19.5 12 19.5C14.3 19.5 16.2 17.5 16.2 15C16.2 12.2 13.9 9.3 12 6.8Z"/>
+            </svg>
+          </div>
+          <span class="font-headline-sm text-headline-sm text-primary tracking-tight">RUGI-BATCH</span>
+        </div>
+        <div class="flex items-center gap-space-sm">
+          <span class="hidden sm:inline font-label-md text-label-md text-on-surface-variant">Sistem Catat Produksi</span>
+          <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Halaman-halaman konten -->
+      <main class="flex-1 pt-16 pb-24 lg:pb-space-xl bg-surface px-margin-mobile lg:px-margin max-w-[1200px] w-full mx-auto">
+
+        <!-- BERANDA -->
+        <div id="page-beranda" class="page-view pt-6"></div>
+
+        <!-- CATAT BATCH -->
+        <div id="page-catat-batch" class="page-view pt-6 hidden"></div>
+
+        <!-- HASIL ANALISIS -->
+        <div id="page-hasil-analisis" class="page-view pt-6 hidden"></div>
+
+        <!-- RIWAYAT -->
+        <div id="page-riwayat" class="page-view pt-6 hidden"></div>
+
+      </main>
+    </div>
+
+    <!-- Bottom Nav Mobile -->
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface-container-lowest shadow-[0_-2px_10px_rgba(0,0,0,0.06)] z-50 flex items-stretch">
+      <a class="nav-link flex-1 flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-view="beranda" href="#beranda">
+        <span class="material-symbols-outlined text-[24px]">home</span>
+        <span class="font-label-sm text-label-sm leading-tight">Beranda</span>
+      </a>
+      <a class="nav-link flex-1 flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-view="catat-batch" href="#catat-batch">
+        <span class="material-symbols-outlined text-[24px]">assignment_add</span>
+        <span class="font-label-sm text-label-sm leading-tight">Catat Batch</span>
+      </a>
+      <a class="nav-link flex-1 flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-view="riwayat" href="#riwayat">
+        <span class="material-symbols-outlined text-[24px]">fact_check</span>
+        <span class="font-label-sm text-label-sm leading-tight">Riwayat</span>
+      </a>
+    </nav>
+  </div>
+
+  <!-- =========================================================
+       TOAST GLOBAL
+       ========================================================= -->
+  <div id="global-toast" class="fixed bottom-6 right-6 max-w-sm bg-primary-container text-on-primary px-5 py-4 rounded-[12px] shadow-xl hidden flex items-center gap-3 z-[999]">
+    <span class="material-symbols-outlined text-3xl" id="toast-icon">task_alt</span>
+    <div class="flex flex-col">
+      <span class="font-label-md text-label-md" id="toast-title">Berhasil</span>
+      <span class="font-body-sm text-body-sm text-on-primary/90" id="toast-body"></span>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+
+  <!-- =========================================================
+       SERVICE WORKER — pendaftaran offline-first
+       ========================================================= -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker
+          .register('./sw.js', { scope: './' })
+          .then(reg => {
+            console.log('[SW] Terdaftar, scope:', reg.scope);
+            // Cek update SW setiap kali halaman dimuat
+            reg.addEventListener('updatefound', () => {
+              const newWorker = reg.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  // Ada versi SW baru — beri tahu app.js via CustomEvent
+                  window.dispatchEvent(new CustomEvent('sw-update-available'));
+                }
+              });
+            });
+          })
+          .catch(err => console.warn('[SW] Gagal daftar:', err));
+      });
+    }
+  </script>
+</body>
+</html>

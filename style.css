@@ -1,0 +1,370 @@
+/* ============================================================
+   RUGI-BATCH AI — Global Stylesheet
+   Menggunakan design token dari DESIGN.md Koperasi Bawang Hangat
+   ============================================================ */
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overscroll-behavior: none;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #fff8f5;
+  color: #231a11;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { display: none; }
+
+/* ---------- Page Transition System ---------- */
+.page-view {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.page-view.active {
+  display: block;
+  opacity: 1;
+}
+
+/* Login page memakai flexbox, bukan block */
+#page-login.active {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Navigation Active State ---------- */
+/* Sidebar nav link */
+.nav-link {
+  color: #414940;
+  text-decoration: none;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.nav-link:hover {
+  background-color: #f8e5d6;
+  color: #231a11;
+}
+
+.nav-link.active {
+  background-color: #2f6b3a;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* Mobile bottom nav */
+nav .nav-link {
+  color: #414940;
+}
+
+nav .nav-link.active {
+  background-color: #2f6b3a;
+  color: #ffffff;
+}
+
+/* ---------- Material Symbols Trick ---------- */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.icon-filled {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* ---------- Card Status Bar (kiri kartu) ---------- */
+.status-bar-normal  { background-color: #2e7d32; }
+.status-bar-waspada { background-color: #f2b705; }
+.status-bar-bocor   { background-color: #ba1a1a; }
+
+/* ---------- Batch Card List ---------- */
+.batch-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  cursor: pointer;
+  transition: box-shadow 0.15s, background-color 0.15s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.batch-card:hover { background-color: #fff1e8; }
+
+.batch-card.selected {
+  background-color: #fff1e8;
+  outline: 2px solid #2f6b3a;
+  outline-offset: -2px;
+}
+
+/* ---------- Chart SVG Responsive ---------- */
+.chart-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.chart-wrapper svg {
+  min-width: 580px;
+  display: block;
+}
+
+/* ---------- Form Inputs ---------- */
+.form-input {
+  height: 56px;
+  padding: 0 1rem;
+  border: 2px solid #D5C9B8;
+  border-radius: 10px;
+  background: #ffffff;
+  font-size: 18px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #231a11;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.form-input:focus {
+  border-color: #2f6b3a;
+  box-shadow: 0 0 0 3px rgba(47, 107, 58, 0.15);
+}
+
+.form-input::placeholder { color: #9e9080; }
+
+.form-label {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  color: #231a11;
+  margin-bottom: 6px;
+}
+
+/* ---------- Stepper Input (+ / - button) ---------- */
+.stepper-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stepper-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  border: none;
+  background: #f8e5d6;
+  color: #231a11;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.1s, transform 0.1s;
+  user-select: none;
+}
+
+.stepper-btn:active { transform: scale(0.95); background-color: #f2dfd1; }
+
+.stepper-input {
+  flex: 1;
+  height: 56px;
+  text-align: center;
+  border: 2px solid #D5C9B8;
+  border-radius: 10px;
+  background: #ffffff;
+  font-size: 22px;
+  font-weight: 700;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #231a11;
+  outline: none;
+  transition: border-color 0.15s;
+  -moz-appearance: textfield;
+}
+
+.stepper-input::-webkit-inner-spin-button,
+.stepper-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+.stepper-input:focus { border-color: #2f6b3a; }
+
+/* ---------- Badges / Chips ---------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.badge-normal   { background: #b1f2b4; color: #002108; }
+.badge-waspada  { background: #ffdcc2; color: #6d3a00; border: 1.5px solid #f2b705; }
+.badge-bocor    { background: #ffdad6; color: #93000a; border: 1.5px solid #ba1a1a; }
+
+/* ---------- Loading Spinner ---------- */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid rgba(255,255,255,0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+.spinner-primary {
+  border-color: rgba(47,107,58,0.2);
+  border-top-color: #2f6b3a;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- Skeleton Loader ---------- */
+.skeleton {
+  background: linear-gradient(90deg, #f2dfd1 25%, #fff1e8 50%, #f2dfd1 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 8px;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ---------- Toast Animation ---------- */
+#global-toast {
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  transform: translateY(0);
+}
+
+#global-toast.toast-hidden {
+  transform: translateY(20px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---------- Error Banner ---------- */
+#login-error {
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-8px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ---------- Accordion ---------- */
+.accordion-content {
+  overflow: hidden;
+  transition: max-height 0.25s ease;
+  max-height: 0;
+}
+
+.accordion-content.open {
+  max-height: 600px;
+}
+
+/* ---------- Progress Bar ---------- */
+.progress-bar-track {
+  width: 100%;
+  background: #f2dfd1;
+  height: 10px;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.6s ease;
+}
+
+/* ---------- Radio Group Buttons ---------- */
+.radio-btn {
+  height: 56px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+  background: #f8e5d6;
+  color: #231a11;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.radio-btn.selected {
+  background: #2f6b3a;
+  color: #ffffff;
+}
+
+/* ---------- Checklist Item ---------- */
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.check-item:hover { background-color: #fff1e8; }
+
+.check-item input[type="checkbox"] {
+  width: 26px;
+  height: 26px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: #2f6b3a;
+  cursor: pointer;
+}
+
+/* ---------- Utility ---------- */
+.text-rupiah { font-variant-numeric: tabular-nums; }
+
+.section-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+  border: 1.5px solid #E3DACD;
+}
+
+.stat-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Batang warna kiri kartu */
+.stat-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  border-radius: 12px 0 0 12px;
+}
+
+.stat-card.bar-green::before  { background: #145224; }
+.stat-card.bar-orange::before { background: #8f4e00; }
+.stat-card.bar-red::before    { background: #ba1a1a; }
+.stat-card.bar-yellow::before { background: #f2b705; }
