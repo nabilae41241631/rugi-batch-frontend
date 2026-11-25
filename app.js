@@ -553,82 +553,67 @@ function _htmlBeranda(c, d, offline = false) {
     </div>`;
 }
 
-/** SVG grafik rendemen mengikuti struktur Stitch (skala Y otomatis). */
+/** SVG diagram batang rendemen ramah pengguna UMKM (skala Y bersih mulai 0%). */
 function _svgGrafik(data) {
   if (!data.length) return `<div class="text-center py-12 font-body-md text-body-md text-on-surface-variant">Belum ada data riwayat grafik.</div>`;
 
   const vals = data.map(b => Number(b.rendemen_aktual_persen ?? 0));
-  const rawMin = Math.min(...vals);
-  const rawMax = Math.max(...vals);
-  const pad  = Math.max((rawMax - rawMin) * 0.3, 6);
-  const yMin = Math.max(0,  Math.floor(rawMin - pad));
-  const yMax = Math.ceil(rawMax + pad);
-  const range = yMax - yMin || 1;
+  const rawMax = Math.max(...vals, 36);
+  const yMax = Math.ceil(rawMax / 20) * 20;
+  const step = yMax / 4;
+  const ticks = [0, step, step * 2, step * 3, yMax];
 
-  const W = 60, H = 210, padL = 50, padT = 20, padB = 30;
-  const totalW = padL + data.length * W + 10;
-  const toY = pct => padT + ((yMax - pct) / range) * H;
+  const W = 88, H = 220, padL = 54, padT = 30, padB = 36;
+  const totalW = Math.max(760, padL + data.length * W + 24);
+  const baseY = padT + H;
+  const toY = pct => padT + ((yMax - pct) / yMax) * H;
   const batasY = toY(26);
-
-  // Grid Y ticks
-  const step = Math.round(range / 3) || 1;
-  const ticks = [yMin, yMin + step, yMin + 2*step, yMax];
 
   let gridLines = ticks.map(v => {
     const y = toY(v);
-    return `<line stroke="#f2dfd1" stroke-width="1" x1="${padL}" x2="${totalW}" y1="${y}" y2="${y}"/>
-    <text fill="#71796f" font-size="12" font-weight="700" text-anchor="end" x="${padL-6}" y="${y+4}">${v}%</text>`;
+    return `<line stroke="#ede0d4" stroke-width="1" x1="${padL}" x2="${totalW - 12}" y1="${y}" y2="${y}"/>
+    <text fill="#5c5349" font-size="13" font-weight="700" text-anchor="end" x="${padL - 8}" y="${y + 4}">${v}%</text>`;
   }).join('');
 
   let batasLine = '';
-  if (batasY > padT && batasY < padT + H) {
+  if (batasY > padT && batasY < baseY) {
     batasLine = `
-      <rect fill="#ffdad6" fill-opacity="0.25" height="${padT+H-batasY}" width="${totalW-padL}" x="${padL}" y="${batasY}"/>
-      <line stroke="#71796f" stroke-dasharray="6 6" stroke-width="2.5" x1="${padL}" x2="${totalW}" y1="${batasY}" y2="${batasY}"/>
-      <rect fill="#231a11" height="26" rx="4" width="250" x="${padL+20}" y="${batasY-13}"/>
-      <text fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" x="${padL+145}" y="${batasY+4}">--- BATAS WAJAR MINIMAL 26% ---</text>`;
+      <line stroke="#8f4e00" stroke-dasharray="6 4" stroke-width="2" x1="${padL}" x2="${totalW - 12}" y1="${batasY}" y2="${batasY}"/>
+      <text fill="#8f4e00" font-size="12" font-weight="700" text-anchor="end" x="${totalW - 16}" y="${batasY - 6}">Target Minimal 26%</text>`;
   }
 
-  let pathD = '', circles = '', labels = '';
+  let bars = '';
   data.forEach((item, i) => {
-    const x   = padL + i * W + W/2;
     const pct = vals[i];
-    const y   = toY(pct);
-    const st  = normSt(item.status_batch);
+    const barW = 42;
+    const barX = padL + i * W + (W - barW) / 2;
+    const centerX = barX + barW / 2;
+    const barY = toY(pct);
+    const barH = Math.max(4, baseY - barY);
+    const st = normSt(item.status_batch);
     const anomali = st !== 'Normal';
+    const warnaBatang = anomali ? '#ba1a1a' : '#2F6B3A';
+    const warnaTeks = anomali ? '#ba1a1a' : '#145224';
+    const kode = esc(item.kode_batch || `B${i + 1}`);
 
-    if (i > 0) {
-      const px  = padL + (i-1)*W + W/2;
-      const py  = toY(vals[i-1]);
-      pathD += `<line fill="none" stroke="#2F6B3A" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" x1="${px}" y1="${py}" x2="${x}" y2="${y}"/>`;
-    }
-
-    if (anomali) {
-      circles += `
-        <circle cx="${x}" cy="${y}" fill="#ba1a1a" r="10" stroke="#ffffff" stroke-width="2"/>
-        <circle cx="${x}" cy="${y}" fill="none" opacity="0.6" r="14" stroke="#ba1a1a" stroke-width="2"/>
-        <rect fill="#ba1a1a" height="24" rx="4" width="70" x="${x-35}" y="${y+16}"/>
-        <text fill="#ffffff" font-size="11" font-weight="700" text-anchor="middle" x="${x}" y="${y+32}">✖ ${esc(st)}</text>
-        <text fill="#ba1a1a" font-size="12" font-weight="700" text-anchor="middle" x="${x}" y="${y-16}">${fd(pct)}%</text>`;
-      labels += `<text fill="#ba1a1a" font-size="11" font-weight="700" text-anchor="middle" x="${x}" y="${padT+H+padB-2}">${esc(item.kode_batch||`B${i+1}`)}</text>`;
-    } else {
-      circles += `<circle cx="${x}" cy="${y}" fill="#2F6B3A" r="6" stroke="#ffffff" stroke-width="2"/>
-        <text fill="#145224" font-size="11" font-weight="700" text-anchor="middle" x="${x}" y="${y-10}">${fd(pct)}%</text>`;
-      labels  += `<text fill="#414940" font-size="11" font-weight="700" text-anchor="middle" x="${x}" y="${padT+H+padB-2}">${esc(item.kode_batch||`B${i+1}`)}</text>`;
-    }
+    bars += `
+      <g>
+        <title>${kode}: Rendemen ${fd(pct)}% (${esc(st)})</title>
+        <rect fill="${warnaBatang}" height="${barH}" rx="6" width="${barW}" x="${barX}" y="${barY}"/>
+        <text fill="${warnaTeks}" font-size="13" font-weight="700" text-anchor="middle" x="${centerX}" y="${barY - 8}">${fd(pct)}%</text>
+        <text fill="${anomali ? '#ba1a1a' : '#231a11'}" font-size="12" font-weight="700" text-anchor="middle" x="${centerX}" y="${baseY + 22}">${kode}</text>
+      </g>`;
   });
 
   return `
-    <svg class="w-full h-72" fill="none" viewBox="0 0 ${totalW} ${padT+H+padB+10}" xmlns="http://www.w3.org/2000/svg">
-      <rect fill="#FFFBF7" height="${H}" rx="8" width="${totalW-padL}" x="${padL}" y="${padT}"/>
+    <svg class="w-full h-80" fill="none" viewBox="0 0 ${totalW} ${baseY + padB}" xmlns="http://www.w3.org/2000/svg">
+      <rect fill="#FFFBF7" height="${H}" rx="8" width="${totalW - padL - 12}" x="${padL}" y="${padT}"/>
       ${gridLines}
-      <line stroke="#c0c9bd" stroke-width="1.5" x1="${padL}" x2="${totalW}" y1="${padT+H}" y2="${padT+H}"/>
+      <line stroke="#b5aaa0" stroke-width="1.5" x1="${padL}" x2="${totalW - 12}" y1="${baseY}" y2="${baseY}"/>
+      ${bars}
       ${batasLine}
-      ${pathD}${circles}${labels}
     </svg>`;
 }
-
-/* ---------------------------------------------------------------- §6  CATAT BATCH ---- */
 
 function renderCatatBatch() {
   const c = document.getElementById('page-catat-batch');
